@@ -38,3 +38,46 @@ SimpleSignature.configure do |c|
    c.expiry_time = 900
 end
 ```
+
+# Signing
+
+```ruby
+generator = SimpleSignature::Generator.new(key) do |g|
+  g.include method, path, query_string, body
+end
+```
+
+```ruby
+generator = SimpleSignature::Generator.new(key) do |g|
+  g.include 'some text'
+  g.include 'more text'
+  ...
+end
+```
+
+```ruby
+generator.signature
+generator.timestamp
+generator.auth_hash
+generator.auth_params
+```
+
+# Validating
+
+```ruby
+validator = SimpleSignature::Validator.new(key, signature, timestamp) do |v|
+  v.include 'some text here'
+  v.include 'some more text'
+end
+```
+
+```ruby
+# This class will validate a request method, path, query_string and body
+validator = SimpleSignature::RequestValidator.new(request)
+```
+
+```ruby
+validator.success? # true or false
+validator.error.code
+validator.error.message
+```
