@@ -1,3 +1,11 @@
+# Installation
+
+Add it to your gemfile with:
+
+```ruby
+  gem 'simple_signature', git: 'git@github.com:workshare/simple-signature-ruby.git'
+```
+
 # Configuration
 
 You may use a file, for example `/config/initializers/simple_signature.rb` with contents:
