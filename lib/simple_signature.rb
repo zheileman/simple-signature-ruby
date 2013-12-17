@@ -1,4 +1,5 @@
 module SimpleSignature
+  autoload :Query, 'simple_signature/generator'
   autoload :Keystore, 'simple_signature/keystore'
   autoload :Generator, 'simple_signature/generator'
   autoload :Validator, 'simple_signature/validator'

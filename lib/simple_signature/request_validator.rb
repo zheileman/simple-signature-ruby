@@ -32,11 +32,8 @@ module SimpleSignature
       [@request.body.read, @request.body.rewind][0]
     end
     def query_string
-      @request.query_string.sub(
-        URI.encode_www_form(@request.params.select { 
-          |k,_| [SimpleSignature.key_param_name, SimpleSignature.signature_param_name, SimpleSignature.timestamp_param_name].include?(k) 
-        }), ''
-      )
+      Query.new(@request.query_string).sort.except(
+        SimpleSignature.key_param_name, SimpleSignature.signature_param_name, SimpleSignature.timestamp_param_name).to_s
     end
   end
 

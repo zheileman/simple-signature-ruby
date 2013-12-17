@@ -3,7 +3,9 @@ require 'simple_signature'
 module SimpleSignature
 
   class Generator
+    require 'simple_signature/query'
     require 'openssl'
+    
     attr_reader :token, :timestamp
 
     def initialize key, timestamp = nil, &block
