@@ -61,6 +61,15 @@ generator = SimpleSignature::Generator.new(key) do |g|
 end
 ```
 
+You can use the generator without a block too:
+
+```ruby
+generator = SimpleSignature::Generator.new(key)
+generator.include method, path, query_string, body
+generator.include 'more text here', 'even more'
+generator.reset!  # to clean the previous data and prepare the generator for a new signature
+```
+
 After succesfully generating a signature, you can access the relevant information needed to validate this signature in the future, with the following methods.
 
 ```ruby

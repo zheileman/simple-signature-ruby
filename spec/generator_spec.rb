@@ -24,16 +24,26 @@ describe SimpleSignature::Generator do
     end
 
     it "should generate a timestamp if there is no argument" do
-      timestamp = Time.now.to_i
-      expect(subject.new('service').timestamp).to eq(timestamp)
+      expect(subject.new('service').timestamp).to eq(Time.now.to_i)
     end
     
     it "should accept a block with calls to #include" do
-      pending 'blah'
       expect(subject.new('service') do |g|
         g.include 'some text here'
         g.include 'some more text'
-      end).to receive(:include).twice
+      end).not_to be_nil
+    end
+    
+    it "should allow to be instantiated without a block, and after that allow calls to #include" do
+      signature1 = subject.new('service') do |g|
+        g.include 'some text here'
+        g.include 'some more text'
+      end
+      
+      signature2 = subject.new('service', signature1.timestamp)
+      signature2.include 'some text here'
+      signature2.include 'some more text'
+      expect(signature1.signature).to eq(signature2.signature) 
     end
   end
 
