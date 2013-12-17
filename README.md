@@ -13,10 +13,10 @@ You may use a file, for example `/config/initializers/simple_signature.rb` with 
 ```ruby
   SimpleSignature.configure do |c|
     c.init_keystore(keys)  
-    c.expiry_time = 900  
-    c.key_param_name = 'sigkey'  
-    c.signature_param_name = 'signature'  
-    c.timestamp_param_name = 'timestamp'  
+    c.expiry_time = 900                   # default is 900
+    c.key_param_name = 'sigkey'           # default is 'sigkey'
+    c.signature_param_name = 'signature'  # default is 'signature'
+    c.timestamp_param_name = 'timestamp'  # default is 'timestamp'
   end  
 ```
 
@@ -33,21 +33,19 @@ In `c.init_keystore(keys)` keys is a hash with n-keys and values in the format:
 Full example of an initializer reading a YML file with pre-shared keys:
 
 ```ruby
-file_path = File.join("#{Rails.root}", "config", "keystore.yml")
+file_path = File.join("config", "keystore.yml")
+file_path = File.join("config", "keystore-sample.yml") unless File.exist?(file_path)
 
-unless File.exists?(file_path)
-  puts "[Keystore] Shared keys file not found. Copy keystore-sample.yml to keystore.yml"
-end
-
-keys = YAML.load_file(file_path) rescue {}
+keys = YAML.load_file(file_path)
 
 SimpleSignature.configure do |c|
    c.init_keystore(keys)
-   c.expiry_time = 900
 end
 ```
 
 # Signing
+
+Use `include` to add strings to the final payload to be signed. You can separate several strings with commas or in different lines. Examples:
 
 ```ruby
 generator = SimpleSignature::Generator.new(key) do |g|
@@ -63,11 +61,13 @@ generator = SimpleSignature::Generator.new(key) do |g|
 end
 ```
 
+After succesfully generating a signature, you can access the relevant information needed to validate this signature in the future, with the following methods.
+
 ```ruby
 generator.signature
 generator.timestamp
-generator.auth_hash
-generator.auth_params
+generator.auth_hash     # a Hash containing the signature key, signature and timestamp
+generator.auth_params   # a query string representation of the auth_hash, ready for inclusing in a URL query params
 ```
 
 # Validating
@@ -86,6 +86,8 @@ validator = SimpleSignature::RequestValidator.new(request)
 
 ```ruby
 validator.success? # true or false
+
+# In case of error (success = false)
 validator.error.code
 validator.error.message
 ```
