@@ -65,8 +65,13 @@ You can use the generator without a block too:
 
 ```ruby
 generator = SimpleSignature::Generator.new(key)
+
 generator.include method, path, query_string, body
 generator.include 'more text here', 'even more'
+
+generator.include_query {:x => 1, :a => 2}  # You can pass a Hash
+generator.include_query 'x=1&a=2'   # Or a query string. Will be sorted.
+
 generator.reset!  # to clean the previous data and prepare the generator for a new signature
 ```
 

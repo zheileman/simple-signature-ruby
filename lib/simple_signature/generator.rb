@@ -6,7 +6,7 @@ module SimpleSignature
     require 'simple_signature/query'
     require 'openssl'
     
-    attr_reader :token
+    attr_reader :token, :data
 
     def initialize key, timestamp = nil, &block
       @data = []
@@ -24,6 +24,10 @@ module SimpleSignature
 
     def include *args
       @data << args
+    end
+    
+    def include_query query
+      @data << Query.new(query).sort.to_s
     end
     
     def timestamp

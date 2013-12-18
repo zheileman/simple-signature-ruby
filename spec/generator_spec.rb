@@ -45,6 +45,31 @@ describe SimpleSignature::Generator do
       signature2.include 'some more text'
       expect(signature1.signature).to eq(signature2.signature) 
     end
+    
+    it "should accept calls to #include_query with a Hash and reorder it to convert into a query string" do
+      params = {:x => 1, :a => 2}
+      generator = subject.new('service')
+      generator.include_query params
+      expect(generator.data).to eq(["a=2&x=1"])
+    end
+    
+    it "should accept calls to #include_query with a complex Hash and reorder it to convert into a query string" do
+      params = {
+        'session_user_uuid' => '92c0fe8c-21ae-4e81-aa74-6eeab53575a9',
+        'folder[name]' => 'Test folder',
+        'folder[group]' => true
+      }
+      generator = subject.new('service')
+      generator.include_query params
+      expect(generator.data).to eq(["folder%5Bgroup%5D=true&folder%5Bname%5D=Test+folder&session_user_uuid=92c0fe8c-21ae-4e81-aa74-6eeab53575a9"])
+    end
+    
+    it "should accept calls to #include_query with a query string and reorder it" do
+      params = "x=1&a=2"
+      generator = subject.new('service')
+      generator.include_query params
+      expect(generator.data).to eq(["a=2&x=1"])
+    end
   end
 
   describe "#signature" do

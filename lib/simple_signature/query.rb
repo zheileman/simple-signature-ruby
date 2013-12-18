@@ -6,7 +6,7 @@ module SimpleSignature
     attr_reader :params
 
     def initialize query
-      @params = CGI.parse(query)
+      @params = query.is_a?(Hash) ? query : CGI.parse(query)
     end
 
     def sort
